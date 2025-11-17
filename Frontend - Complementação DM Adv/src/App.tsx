@@ -372,10 +372,10 @@ export default function App() {
                     type="button"
                     onClick={handleDownload}
                     size="sm"
-                    className="size-9 mr-4 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 transition-colors duration-300"
+                    className="size-9 mr-2 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 transition-colors duration-300"
                   >
-                    <Download className="size-4 mr-2" />
-                    Download
+                    <Download className="size-6 ml-1" />
+                  
                   </Button>
                 </Alert>
               )}
