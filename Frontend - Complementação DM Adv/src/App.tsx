@@ -64,17 +64,42 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [downloadUrl, setDownloadUrl] = useState<string>('');
 
+
+      // Esta função recebe um valor (string) e retorna o CPF formatado
+    const formatCPF = (value: string) => {
+      // 1. Remove tudo que não for dígito
+      const numericValue = value.replace(/\D/g, '');
+
+      // 2. Aplica a máscara: 000.000.000-00
+      return numericValue
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+        // 3. Limita a 14 caracteres (os 11 dígitos + 3 separadores)
+        .slice(0, 14);
+    };
+
   const handleInputChange = (field: keyof DadosCliente, value: string) => {
+    let newValue = value;
+
+    if (field === 'CPF' || field === 'representanteCpf') {
+      // Apenas aplica a formatação se o campo for o CPF
+      newValue = formatCPF(value);
+    } else {
+      // Caso contrário, mantém o valor original
+      newValue = value;
+    }
+    
     setDadosCliente(prev => ({
       ...prev,
-      [field]: value,
+      [field]: newValue,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-
+    console.log(dadosCliente);
     
     if (!pdfFile) {
       setStatus('error');
@@ -92,7 +117,7 @@ export default function App() {
       formData.append('pdf_file', pdfFile);
       formData.append('dados_cliente', JSON.stringify(dadosCliente));
 
-      const response = await fetch('https://script-complementacao.onrender.com/api/preencher-pdf', {
+      const response = await fetch('http://localhost:5000/api/preencher-pdf', {
         method: 'POST',
         body: formData,
       });
@@ -151,7 +176,7 @@ export default function App() {
                   type="text"
                   placeholder="Digite o nome completo"
                   value={dadosCliente.nomeCompleto}
-                  onChange={(value) => handleInputChange('Nome Completo', value)}
+                  onChange={(e) => handleInputChange('Nome Completo', e.target.value)}
                 />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -160,7 +185,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o RG"
                     value={dadosCliente.RG}
-                    onChange={(value) => handleInputChange('RG', value)}
+                    onChange={(e) => handleInputChange('RG', e.target.value)}
                   />
 
                   <FormField
@@ -168,7 +193,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o CPF"
                     value={dadosCliente.CPF}
-                    onChange={(value) => handleInputChange('CPF', value)}
+                    onChange={(e) => handleInputChange('CPF', e.target.value, 'CPF')}
                   />
                 </div>
 
@@ -177,7 +202,7 @@ export default function App() {
                   type="text"
                   placeholder="Digite o endereço"
                   value={dadosCliente.Endereco}
-                  onChange={(value) => handleInputChange('Endereco', value)}
+                  onChange={(e) => handleInputChange('Endereco', e.target.value)}
                 />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -186,7 +211,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o número da casa"
                     value={dadosCliente.Numero}
-                    onChange={(value) => handleInputChange('Numero', value)}
+                    onChange={(e) => handleInputChange('Numero', e.target.value)}
                   />
 
                   <FormField
@@ -194,7 +219,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o bairro"
                     value={dadosCliente.Bairro}
-                    onChange={(value) => handleInputChange('Bairro', value)}
+                    onChange={(e) => handleInputChange('Bairro', e.target.value)}
                   />
                 </div>
 
@@ -204,7 +229,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite a cidade"
                     value={dadosCliente.Cidade}
-                    onChange={(value) => handleInputChange('Cidade', value)}
+                    onChange={(e) => handleInputChange('Cidade', e.target.value)}
                   />
 
                   <FormField
@@ -212,7 +237,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o CEP"
                     value={dadosCliente.CEP}
-                    onChange={(value) => handleInputChange('CEP', value)}
+                    onChange={(e) => handleInputChange('CEP', e.target.value)}
                   />
                 </div>
 
@@ -222,7 +247,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite a nacionalidade"
                     value={dadosCliente.Nacionalidade}
-                    onChange={(value) => handleInputChange('Nacionalidade', value)}
+                    onChange={(e) => handleInputChange('Nacionalidade', e.target.value)}
                   />
 
                   <FormField
@@ -230,7 +255,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o estado civil"
                     value={dadosCliente.EstadoCivil}
-                    onChange={(value) => handleInputChange('EstadoCivil', value)}
+                    onChange={(e) => handleInputChange('EstadoCivil', e.target.value)}
                   />
                 </div>
 
@@ -239,7 +264,7 @@ export default function App() {
                   type="text"
                   placeholder="Digite a profissão"
                   value={dadosCliente.Profissao}
-                  onChange={(value) => handleInputChange('Profissao', value)}
+                  onChange={(e) => handleInputChange('Profissao', e.target.value)}
                 />
 
                 <FormField
@@ -247,7 +272,7 @@ export default function App() {
                   type="text"
                   placeholder="Digite o local da assinatura do documento"
                   value={dadosCliente.localData}
-                  onChange={(value) => handleInputChange('localData', value)}
+                  onChange={(e) => handleInputChange('localData', e.target.value)}
                 />
 
                 <div className="grid grid-cols-3 gap-4">
@@ -256,7 +281,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o dia"
                     value={dadosCliente.Dia}
-                    onChange={(value) => handleInputChange('Dia', value)}
+                    onChange={(e) => handleInputChange('Dia', e.target.value)}
                   />
 
                   <FormField
@@ -264,7 +289,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o mês por extenso (Ex: Dezembro)"
                     value={dadosCliente.Mes}
-                    onChange={(value) => handleInputChange('Mes', value)}
+                    onChange={(e) => handleInputChange('Mes', e.target.value)}
                   />
 
                   <FormField
@@ -272,7 +297,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o ano"
                     value={dadosCliente.Ano}
-                    onChange={(value) => handleInputChange('Ano', value)}
+                    onChange={(e) => handleInputChange('Ano', e.target.value)}
                   />
                 </div>
               </div>
@@ -288,7 +313,7 @@ export default function App() {
                   type="text"
                   placeholder="Digite o nome completo do representante"
                   value={dadosCliente.representanteNomeCompleto}
-                  onChange={(value) => handleInputChange('representanteNomeCompleto', value)}
+                  onChange={(e) => handleInputChange('representanteNomeCompleto', e.target.value)}
                 />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -297,7 +322,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o RG do representante"
                     value={dadosCliente.representanteRg}
-                    onChange={(value) => handleInputChange('representanteRg', value)}
+                    onChange={(e) => handleInputChange('representanteRg', e.target.value)}
                   />
 
                   <FormField
@@ -305,7 +330,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite o CPF do representante"
                     value={dadosCliente.representanteCpf}
-                    onChange={(value) => handleInputChange('representanteCpf', value)}
+                    onChange={(e) => handleInputChange('representanteCpf', e.target.value)}
                   />
                 </div>
 
@@ -315,7 +340,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite a nacionalidade do representante"
                     value={dadosCliente.representanteNacionalidade}
-                    onChange={(value) => handleInputChange('representanteNacionalidade', value)}
+                    onChange={(e) => handleInputChange('representanteNacionalidade', e.target.value)}
                   />
 
                   <FormField
@@ -323,7 +348,7 @@ export default function App() {
                     type="text"
                     placeholder="Digite a profissão do representante"
                     value={dadosCliente.representanteProfissao}
-                    onChange={(value) => handleInputChange('representanteProfissao', value)}
+                    onChange={(e) => handleInputChange('representanteProfissao', e.target.value)}
                   />
                 </div>
 
@@ -332,7 +357,7 @@ export default function App() {
                   type="text"
                   placeholder="Digite o estado civil do representante"
                   value={dadosCliente.representanteEstadoCivil}
-                  onChange={(value) => handleInputChange('representanteEstadoCivil', value)}
+                  onChange={(e) => handleInputChange('representanteEstadoCivil', e.target.value)}
                 />
               </div>
 
@@ -375,7 +400,7 @@ export default function App() {
                     className="size-9 mr-2 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 transition-colors duration-300"
                   >
                     <Download className="size-6 ml-1" />
-                  
+                    
                   </Button>
                 </Alert>
               )}
