@@ -41,6 +41,7 @@ export default function App() {
     CPF: '',
     Endereco: '',
     Cidade: '',
+    UF: '',
     CEP: '',
     localData: '',
     Dia: '',
@@ -117,7 +118,7 @@ export default function App() {
       formData.append('pdf_file', pdfFile);
       formData.append('dados_cliente', JSON.stringify(dadosCliente));
 
-      const response = await fetch('https://script-complementacao.onrender.com/api/preencher-pdf', {
+      const response = await fetch('http://localhost:5000/api/preencher-pdf', {
         method: 'POST',
         body: formData,
       });
@@ -223,13 +224,24 @@ export default function App() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <FormField
-                    label="Cidade"
+                 <FormField
+                    label="Cidade/UF"
                     type="text"
-                    placeholder="Digite a cidade"
+                    placeholder="Digite a cidade e o UF"
                     value={dadosCliente.Cidade}
                     onChange={(e) => handleInputChange('Cidade', e.target.value)}
+                  />
+
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                 
+
+                  <FormField
+                    label="Estado"
+                    type="text"
+                    placeholder="Digite o estado"
+                    value={dadosCliente.UF}
+                    onChange={(e) => handleInputChange('UF', e.target.value)}
                   />
 
                   <FormField
@@ -268,7 +280,7 @@ export default function App() {
                 />
 
                 <FormField
-                  label="Local e Data"
+                  label="Local da Assinatura do Documento"
                   type="text"
                   placeholder="Digite o local da assinatura do documento"
                   value={dadosCliente.localData}
@@ -287,7 +299,7 @@ export default function App() {
                   <FormField
                     label="Mês"
                     type="text"
-                    placeholder="Digite o mês por extenso (Ex: Dezembro)"
+                    placeholder="Digite o mês p/ extenso"
                     value={dadosCliente.Mes}
                     onChange={(e) => handleInputChange('Mes', e.target.value)}
                   />
