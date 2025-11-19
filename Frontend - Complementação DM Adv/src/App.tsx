@@ -99,8 +99,6 @@ export default function App() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log(dadosCliente);
     
     if (!pdfFile) {
       setStatus('error');
