@@ -118,7 +118,7 @@ export default function App() {
       formData.append('pdf_file', pdfFile);
       formData.append('dados_cliente', JSON.stringify(dadosCliente));
 
-      const response = await fetch('http://localhost:5000/api/preencher-pdf', {
+      const response = await fetch('https://script-complementacao.onrender.com/api/preencher-pdf', {
         method: 'POST',
         body: formData,
       });
